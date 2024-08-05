@@ -134,10 +134,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const origin = prompt("Which distributed origin would you like to join?");
+            function getQueryParams() {
+                const params = {};
+                window.location.search.substring(1).split('&').forEach(param => {
+                    const [key, value] = param.split('=');
+                    params[key] = decodeURIComponent(value);
+                });
+                return params;
+            }
+
+            const queryParams = getQueryParams();
+            let origin = queryParams['origin'];
+
             if (!origin) {
-                alert("You must enter a valid origin.");
-                return;
+                origin = prompt("Which distributed origin would you like to join?");
+                if (!origin) {
+                    alert("You must enter a valid origin.");
+                    return;
+                }
             }
 
             document.getElementById('start-game-link').href = `/scoreboard/edge-trade.html?origin=${encodeURIComponent(origin)}`;
