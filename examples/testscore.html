@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Ticker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            margin: 0;
+        }
+        #scoreboard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        #api-result {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        #response-time {
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #fetch-button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #0072ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #rules {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+        #rules h2 {
+            margin-top: 0;
+        }
+        #rules ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        #rules li {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="scoreboard">
+        <h1>Distributed Edge Native Option Trader</h1>
+        <div id="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+        <div id="events">
+            <!-- Events will be dynamically added here -->
+        </div>
+        <table id="scoreboard-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Account Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Scoreboard events will be dynamically added here -->
+            </tbody>
+        </table>
+        <a id="start-game-link" href="#" target="_blank" style="margin-top: 20px; font-size: 1.2em; color: #fff; text-decoration: underline;">Join Game</a>
+    </div>
+
+    <div id="rules">
+        <h2>Rules</h2>
+        <ul>
+            <li>Rule #1 - Don't Lose Money</li>
+            <li>Rule #2 - See Rule #1</li>
+            <li>Rule #3 - Only One Holding At A Time</li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const origin = prompt("Which distributed origin would you like to join?");
+            if (!origin) {
+                alert("You must enter a valid origin.");
+                return;
+            }
+
+            document.getElementById('start-game-link').href = `/scoreboard/edge-trade.html?origin=${encodeURIComponent(origin)}`;
+
+            const eventsDiv = document.getElementById('events');
+            const scoreboardTableBody = document.querySelector('#scoreboard-table tbody');
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const currentPriceData = [];
+            const maxPoints = 250;
+
+            const priceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Array(maxPoints).fill(''),
+                    datasets: [{
+                        label: 'Current Price',
+                        data: currentPriceData,
+                        borderColor: 'rgba(255, 165, 0, 1)', // Bright orange
+                        backgroundColor: 'rgba(255, 165, 0, 0.2)', // Light orange for background
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            min: 170,
+                            max: 250
+                        }
+                    }
+                }
+            });
+
+            function updateStockElement(eventData) {
+                try {
+                    const { currentprice, putPrice, callPrice } = eventData;
+
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'event';
+                    eventDiv.innerHTML = `
+                        <div class="price">Current Price: $${currentprice.toFixed(2)}</div>
+                        <div class="price">Put Option Price: $${putPrice.toFixed(2)}</div>
+                        <div class="price">Call Option Price: $${callPrice.toFixed(2)}</div>
+                    `;
+                    eventsDiv.innerHTML = '';
+                    eventsDiv.appendChild(eventDiv);
+
+                    if (currentPriceData.length >= maxPoints) {
+                        currentPriceData.shift();
+                    }
+                    currentPriceData.push(currentprice);
+                    priceChart.update();
+                } catch (error) {
+                    console.error('Error updating stock element:', error);
+                }
+            }
+
+            function updateScoreboard(eventData) {
+                try {
+                    const { user, accountbalance } = eventData;
+                    const existingRow = Array.from(scoreboardTableBody.rows).find(row => row.cells[0].textContent === user);
+
+                    if (existingRow) {
+                        existingRow.cells[1].textContent = `$${accountbalance.toFixed(2)}`;
+                    } else {
+                        const newRow = document.createElement('tr');
+                        newRow.innerHTML = `
+                            <td>${user}</td>
+                            <td>$${accountbalance.toFixed(2)}</td>
+                        `;
+                        scoreboardTableBody.appendChild(newRow);
+                    }
+                } catch (error) {
+                    console.error('Error updating scoreboard:', error);
+                }
+            }
+
+            const eventSource = new EventSource(`/sse?origin=${encodeURIComponent(origin)}`);
+
+            eventSource.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+
+                    if (data.currentprice !== undefined && data.putPrice !== undefined && data.callPrice !== undefined) {
+                        updateStockElement(data);
+                    } 
+
+                    if (data.user !== undefined && data.accountbalance !== undefined) {
+                        updateScoreboard(data);
+                    }
+                } catch (error) {
+                    console.error('Error parsing or processing data:', error);
+                }
+            };
+
+            eventSource.onerror = function (error) {
+                console.error('EventSource failed:', error);
+                eventSource.close();
+            };
+        });
+    </script>
+</body>
+</html>
