@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Orders</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            color: #fff;
+            margin: 0;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        #buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        #data {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #0072ff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #chats {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 600px;
+            height: 50vh;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        pre {
+            margin: 0;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        #financial-status {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .status-div {
+            padding: 10px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <div id="buttons-container">
+            <button onclick="chat.buyCall()">Buy Call</button>
+            <button onclick="chat.buyPut()">Buy Put</button>
+            <button onclick="chat.sell()">Sell</button>
+        </div>
+        <input type="text" id="data" placeholder="Type a message">
+        <button id="send" onclick="chat.send()">Send</button>
+    </div>
+    <div id="chats"></div>
+    <div id="financial-status">
+        <div id="account-balance" class="status-div">Account Balance: $0.00</div>
+        <div id="positions" class="status-div">Positions: No data</div>
+    </div>
+
+    <script type="module">
+        import { connect, JSONCodec } from "https://cdn.jsdelivr.net/npm/nats.ws@1.10.0/esm/nats.js";
+        let me;
+        let accountBalanceTopic;
+        let positionsTopic;
+
+        const jc = JSONCodec();
+
+        window.chat = {
+            send: send,
+            exiting: exiting,
+            buyCall: buyCall,
+            buyPut: buyPut,
+            sell: sell,
+        };
+
+        function getQueryParams() {
+            const params = {};
+            window.location.search.substring(1).split('&').forEach(param => {
+                const [key, value] = param.split('=');
+                params[key] = decodeURIComponent(value);
+            });
+            return params;
+        }
+
+        const queryParams = getQueryParams();
+        const origin = queryParams['origin'];
+
+        const init = async function () {
+            me = prompt("Enter your name:");
+
+            if (!me || me.trim() === "") {
+                me = "Anonymous";
+            }
+
+            const conn = await connect(
+                { servers: `wss://workshop.connected-cloud.io/wss/?origin=${origin}` },
+            );
+
+            conn.closed().then((err) => {
+                let m = "NATS connection closed";
+                addEntry(`${m} ${err ? err.message : ""}`);
+            });
+           (async () => {
+                for await (const s of conn.status()) {
+                    if (s.type !== "pingTimer") {
+                        addEntry(`Received status update: ${s.type}`);
+                    }
+                }
+            })().then();
+
+            (async () => {
+                const announceSub = conn.subscribe("announce");
+                for await (const m of announceSub) {
+                    const jm = jc.decode(m.data);
+                    addEntry(
+                        jm.id === me ? `(me): ${jm.m}` : `(${jm.id}): ${jm.m}`,
+                    );
+                }
+            })().then();
+
+            (async () => {
+                const enterSub = conn.subscribe("enter");
+                for await (const m of enterSub) {
+                    const jm = jc.decode(m.data);
+                    addEntry(`${jm.id} entered.`);
+                }
+            })().then();
+
+            (async () => {
+                const exitSub = conn.subscribe("exit");
+                for await (const m of exitSub) {
+                    const jm = jc.decode(m.data);
+                    if (jm.id !== me) {
+                        addEntry(`${jm.id} exited.`);
+                    }
+                }
+            })().then();
+
+            (async () => {
+                const chatSub = conn.subscribe("chat");
+                for await (const m of chatSub) {
+                    const jm = jc.decode(m.data);
+                    addEntry(
+                        jm.id === me ? `(me): ${jm.m}` : `(${jm.id}): ${jm.m}`,
+                    );
+                }
+            })().then();
+
+            // Subscribe to the user's specific topic for account balance updates
+            accountBalanceTopic = `cash.${me}`;
+            (async () => {
+                const balanceSub = conn.subscribe(accountBalanceTopic);
+                for await (const m of balanceSub) {
+                    const jm = jc.decode(m.data);
+                    updateAccountBalance(jm.accountbalance);
+                }
+            })().then();
+
+            // Subscribe to the user's specific topic for positions updates
+            positionsTopic = `positionsannounce.${me}`;
+            (async () => {
+                const positionsSub = conn.subscribe(positionsTopic);
+                for await (const m of positionsSub) {
+                    const jm = jc.decode(m.data);
+                    updatePositions(jm.message);
+                }
+            })().then();
+
+            conn.publish("enter", jc.encode({ id: me }));
+            return conn;
+        };
+
+        init().then((conn) => {
+            window.nc = conn;
+        }).catch((ex) => {
+            addEntry(`Error connecting to NATS: ${ex}`);
+        });
+
+        let input = document.getElementById("data");
+        input.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("send").click();
+            } else {
+                e.preventDefault();
+            }
+        });
+
+        function send() {
+            input = document.getElementById("data");
+            const m = input.value;
+            if (m !== "" && window.nc) {
+                window.nc.publish("chat", jc.encode({ id: me, m: m }));
+                input.value = "";
+            }
+            return false;
+        }
+
+        function exiting() {
+            if (window.nc) {
+                window.nc.publish("exit", jc.encode({ id: me }));
+            }
+        }
+
+        function addEntry(s) {
+            const p = document.createElement("pre");
+            p.appendChild(document.createTextNode(s));
+            const chats = document.getElementById("chats");
+            chats.insertBefore(p, chats.firstChild);
+        }
+
+        function buyCall() {
+            if (window.nc) {
+                window.nc.publish("order", jc.encode({ type: "call", buyorsell: "buy", user: me }));
+            }
+        }
+
+        function buyPut() {
+            if (window.nc) {
+                window.nc.publish("order", jc.encode({ type: "put", buyorsell: "buy", user: me }));
+            }
+        }
+
+        function sell() {
+            if (window.nc) {
+                window.nc.publish("order", jc.encode({ buyorsell: "sell", user: me }));
+            }
+        }
+
+        function updateAccountBalance(balance) {
+            const accountBalanceDiv = document.getElementById('account-balance');
+            accountBalanceDiv.textContent = `Account Balance: $${balance.toFixed(2)}`;
+        }
+
+        function updatePositions(message) {
+            const positionsDiv = document.getElementById('positions');
+            positionsDiv.textContent = `Positions: ${message}`;
+        }
+    </script>
+</body>
+</html>
