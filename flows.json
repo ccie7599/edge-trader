@@ -50,7 +50,7 @@
         "id": "2603a383d6b1e7d9",
         "type": "mqtt-broker",
         "name": "",
-        "broker": "172.17.0.1",
+        "broker": "host.docker.internal",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -192,7 +192,7 @@
     {
         "id": "77ca465d2499cef7",
         "type": "NATS JetStream Server",
-        "server": "172.17.0.1",
+        "server": "host.docker.internal",
         "port": "4222"
     },
     {
@@ -244,6 +244,20 @@
         "stream": "enter",
         "description": "",
         "subjects": "enter",
+        "max_msgs": "-1",
+        "max_age": "",
+        "max_ageunit": "second",
+        "max_size": "-1",
+        "max_sizeunit": "mb",
+        "num_replicas": "1"
+    },
+    {
+        "id": "3f63d51dc28bc584",
+        "type": "NATS JetStream Stream",
+        "name": "",
+        "stream": "price",
+        "description": "",
+        "subjects": "price",
         "max_msgs": "-1",
         "max_age": "",
         "max_ageunit": "second",
@@ -440,7 +454,7 @@
         "depth": 0,
         "stat": false,
         "showWarnings": false,
-        "x": 340,
+        "x": 420,
         "y": 340,
         "wires": [
             [
@@ -459,8 +473,8 @@
         "syntax": "mustache",
         "template": "{\"start\":\"/db/positions\",\"pattern\":\"{{payload.id}}\",\"files\":\"!context\"}",
         "output": "json",
-        "x": 200,
-        "y": 400,
+        "x": 260,
+        "y": 380,
         "wires": [
             [
                 "df352aeb04137f06"
@@ -859,7 +873,7 @@
         "subject": "",
         "payloadType": "json",
         "x": 1350,
-        "y": 400,
+        "y": 440,
         "wires": []
     },
     {
@@ -869,14 +883,14 @@
         "name": "",
         "server": "77ca465d2499cef7",
         "subjects": "enter",
-        "delivery": "all",
+        "delivery": "new",
         "stream": "ensure",
         "ensurestream": "dad2c6e97b3f397f",
-        "consumertype": "durable",
-        "durable": "enter-durable",
+        "consumertype": "queueGroup",
+        "durable": "enter-queuegroup1",
         "startseq": 0,
         "starttime": 0,
-        "ack": "auto",
+        "ack": "manual",
         "maxackpending": 2000,
         "ackwait": 10000,
         "maxworkerpending": 1000,
@@ -886,7 +900,8 @@
         "y": 560,
         "wires": [
             [
-                "ea38c83958f8b681"
+                "ea38c83958f8b681",
+                "b5b0e98aecc5a274"
             ]
         ]
     },
@@ -901,8 +916,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 190,
-        "y": 480,
+        "x": 430,
+        "y": 500,
         "wires": [
             [
                 "6706a88493626059",
@@ -1060,14 +1075,14 @@
         "name": "",
         "server": "77ca465d2499cef7",
         "subjects": "positions.>",
-        "delivery": "all",
+        "delivery": "new",
         "stream": "ensure",
         "ensurestream": "03ce641126b3a8b5",
-        "consumertype": "durable",
-        "durable": "positionsdurable",
+        "consumertype": "queueGroup",
+        "durable": "positionsqueuegroup2",
         "startseq": 0,
         "starttime": 0,
-        "ack": "auto",
+        "ack": "manual",
         "maxackpending": 2000,
         "ackwait": 10000,
         "maxworkerpending": 1000,
@@ -1077,7 +1092,8 @@
         "y": 680,
         "wires": [
             [
-                "ddb6c9862f3323b2"
+                "ddb6c9862f3323b2",
+                "b5b0e98aecc5a274"
             ]
         ]
     },
@@ -1164,9 +1180,20 @@
         ]
     },
     {
+        "id": "b5b0e98aecc5a274",
+        "type": "NATS JetStream Acknowledge",
+        "z": "5d71f4dcae6e888c",
+        "name": "",
+        "action": "ack",
+        "x": 570,
+        "y": 760,
+        "wires": []
+    },
+    {
         "id": "a25e6e8ef180019e",
         "type": "inject",
         "z": "ddaea7293bc64d2e",
+        "d": true,
         "name": "",
         "props": [
             {
@@ -1262,8 +1289,7 @@
             [
                 "ef4865ded2eeced6",
                 "f2173cd7525a639b",
-                "0e9a3046b1c15512",
-                "36ed55075d8384fc"
+                "0e9a3046b1c15512"
             ]
         ]
     },
@@ -1281,8 +1307,8 @@
         "correl": "",
         "expiry": "",
         "broker": "2603a383d6b1e7d9",
-        "x": 870,
-        "y": 300,
+        "x": 1250,
+        "y": 200,
         "wires": []
     },
     {
@@ -1397,7 +1423,8 @@
         "y": 120,
         "wires": [
             [
-                "99d3a2a0930f1f63"
+                "99d3a2a0930f1f63",
+                "36ed55075d8384fc"
             ]
         ]
     },
@@ -1483,8 +1510,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 80,
-        "y": 60,
+        "x": 520,
+        "y": 540,
         "wires": [
             [
                 "99d3a2a0930f1f63"
@@ -1498,14 +1525,15 @@
         "name": "",
         "event": "message",
         "data": "",
-        "x": 1010,
-        "y": 60,
+        "x": 1250,
+        "y": 440,
         "wires": []
     },
     {
         "id": "16c6432ce8819d3f",
         "type": "inject",
         "z": "ddaea7293bc64d2e",
+        "d": true,
         "name": "",
         "props": [
             {
@@ -1547,8 +1575,8 @@
         "delivery": "all",
         "stream": "ensure",
         "ensurestream": "c368c329fef47646",
-        "consumertype": "durable",
-        "durable": "cashdurable",
+        "consumertype": "ephemeral",
+        "durable": "cashdurable1",
         "startseq": 0,
         "starttime": 0,
         "ack": "auto",
@@ -1557,8 +1585,8 @@
         "maxworkerpending": "",
         "maxdeliver": -1,
         "payloadType": "json",
-        "x": 280,
-        "y": 360,
+        "x": 180,
+        "y": 300,
         "wires": [
             [
                 "3294cb078fcdd392"
@@ -1576,12 +1604,96 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 550,
-        "y": 360,
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "99d3a2a0930f1f63",
+                "eda78219d617e1ba"
+            ]
+        ]
+    },
+    {
+        "id": "e6be770d2f172af6",
+        "type": "NATS JetStream Consumer",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "server": "77ca465d2499cef7",
+        "subjects": "price",
+        "delivery": "new",
+        "stream": "ensure",
+        "ensurestream": "3f63d51dc28bc584",
+        "consumertype": "ephemeral",
+        "durable": "cashdurable1",
+        "startseq": 0,
+        "starttime": 0,
+        "ack": "auto",
+        "maxackpending": 2000,
+        "ackwait": 10000,
+        "maxworkerpending": "",
+        "maxdeliver": -1,
+        "payloadType": "json",
+        "x": 180,
+        "y": 380,
+        "wires": [
+            [
+                "e5ae0c457802c8f6"
+            ]
+        ]
+    },
+    {
+        "id": "e5ae0c457802c8f6",
+        "type": "function",
+        "z": "ddaea7293bc64d2e",
+        "name": "function 13",
+        "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 460,
         "wires": [
             [
                 "99d3a2a0930f1f63"
             ]
+        ]
+    },
+    {
+        "id": "eda78219d617e1ba",
+        "type": "template",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "field": "filename",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "/db/cash/{{payload.user}}",
+        "output": "str",
+        "x": 840,
+        "y": 320,
+        "wires": [
+            [
+                "5193f55b014d8134"
+            ]
+        ]
+    },
+    {
+        "id": "5193f55b014d8134",
+        "type": "file",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1020,
+        "y": 320,
+        "wires": [
+            []
         ]
     },
     {
@@ -1606,30 +1718,13 @@
         "y": 180,
         "wires": [
             [
-                "c38d1277082aef8d",
-                "27cfa5bc35615bd2"
+                "27cfa5bc35615bd2",
+                "dacc51b5c08f95a1"
             ],
             [
                 "1e529c0693816614",
-                "43aee3dade183f4d"
+                "05eedf9407f95b9c"
             ]
-        ]
-    },
-    {
-        "id": "c38d1277082aef8d",
-        "type": "file",
-        "z": "cdc1f90a18705388",
-        "name": "",
-        "filename": "payload.filename",
-        "filenameType": "msg",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "delete",
-        "encoding": "none",
-        "x": 330,
-        "y": 40,
-        "wires": [
-            []
         ]
     },
     {
@@ -1739,26 +1834,6 @@
         ]
     },
     {
-        "id": "43aee3dade183f4d",
-        "type": "template",
-        "z": "cdc1f90a18705388",
-        "name": "",
-        "field": "filename",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "/db/positions/{{payload.user}}",
-        "output": "str",
-        "x": 680,
-        "y": 220,
-        "wires": [
-            [
-                "91d86983faa26b86",
-                "7bbac4ac6a5ea701"
-            ]
-        ]
-    },
-    {
         "id": "b59445efe702432d",
         "type": "file in",
         "z": "cdc1f90a18705388",
@@ -1847,8 +1922,8 @@
         "syntax": "mustache",
         "template": "/db/cash/{{origPayload.user}}",
         "output": "str",
-        "x": 840,
-        "y": 300,
+        "x": 900,
+        "y": 240,
         "wires": [
             [
                 "de8ad167417ff714"
@@ -1955,6 +2030,7 @@
         "id": "91d86983faa26b86",
         "type": "file",
         "z": "cdc1f90a18705388",
+        "d": true,
         "name": "",
         "filename": "filename",
         "filenameType": "msg",
@@ -1963,7 +2039,7 @@
         "overwriteFile": "true",
         "encoding": "none",
         "x": 1260,
-        "y": 240,
+        "y": 220,
         "wires": [
             []
         ]
@@ -2098,7 +2174,7 @@
         "z": "cdc1f90a18705388",
         "name": "Lookup Account",
         "info": "",
-        "x": 340,
+        "x": 360,
         "y": 400,
         "wires": []
     },
@@ -2118,8 +2194,8 @@
         "z": "cdc1f90a18705388",
         "name": "Existing Account",
         "info": "",
-        "x": 520,
-        "y": 420,
+        "x": 540,
+        "y": 380,
         "wires": []
     },
     {
@@ -2136,14 +2212,15 @@
         "id": "fdf823862f5cb467",
         "type": "NATS JetStream Consumer",
         "z": "cdc1f90a18705388",
+        "d": true,
         "name": "",
         "server": "77ca465d2499cef7",
         "subjects": "positions.>",
-        "delivery": "all",
+        "delivery": "new",
         "stream": "ensure",
         "ensurestream": "03ce641126b3a8b5",
-        "consumertype": "durable",
-        "durable": "positionsdurable",
+        "consumertype": "ephemeral",
+        "durable": "positionsqueuegroup1",
         "startseq": 0,
         "starttime": 0,
         "ack": "auto",
@@ -2152,8 +2229,8 @@
         "maxworkerpending": "",
         "maxdeliver": -1,
         "payloadType": "json",
-        "x": 180,
-        "y": 460,
+        "x": 120,
+        "y": 480,
         "wires": [
             [
                 "6aab850f59f6b405",
@@ -2172,8 +2249,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 130,
-        "y": 340,
+        "x": 150,
+        "y": 300,
         "wires": [
             [
                 "fa05c04b3dfe6c30"
@@ -2186,8 +2263,8 @@
         "z": "cdc1f90a18705388",
         "name": "",
         "action": "ack",
-        "x": 290,
-        "y": 520,
+        "x": 490,
+        "y": 600,
         "wires": []
     },
     {
@@ -2249,17 +2326,18 @@
         "type": "template",
         "z": "cdc1f90a18705388",
         "name": "",
-        "field": "topic",
+        "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "cash/{{payload.user}}",
+        "template": "cash.{{payload.user}}",
         "output": "str",
-        "x": 1060,
+        "x": 1080,
         "y": 280,
         "wires": [
             [
                 "c57a712fb21ca85d",
+                "05eedf9407f95b9c",
                 "91d86983faa26b86"
             ]
         ]
@@ -2268,6 +2346,7 @@
         "id": "c57a712fb21ca85d",
         "type": "mqtt out",
         "z": "cdc1f90a18705388",
+        "d": true,
         "name": "",
         "topic": "",
         "qos": "",
@@ -2278,22 +2357,212 @@
         "correl": "",
         "expiry": "",
         "broker": "2603a383d6b1e7d9",
-        "x": 1250,
-        "y": 320,
+        "x": 1290,
+        "y": 280,
         "wires": []
     },
     {
-        "id": "7bbac4ac6a5ea701",
-        "type": "link out",
+        "id": "05eedf9407f95b9c",
+        "type": "NATS JetStream Publish",
         "z": "cdc1f90a18705388",
-        "name": "link out 3",
-        "mode": "link",
-        "links": [
-            "6779de3b1bc2d68e"
-        ],
-        "x": 835,
-        "y": 240,
+        "name": "",
+        "server": "77ca465d2499cef7",
+        "subject": "",
+        "payloadType": "json",
+        "x": 1310,
+        "y": 460,
         "wires": []
+    },
+    {
+        "id": "95e8dd306e59a683",
+        "type": "link in",
+        "z": "cdc1f90a18705388",
+        "name": "link in 1",
+        "links": [
+            "e9d79dc2d3b47810"
+        ],
+        "x": 75,
+        "y": 140,
+        "wires": [
+            [
+                "fa05c04b3dfe6c30"
+            ]
+        ]
+    },
+    {
+        "id": "43aee3dade183f4d",
+        "type": "template",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "field": "filename",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "/db/positions/{{payload.user}}",
+        "output": "str",
+        "x": 1000,
+        "y": 820,
+        "wires": [
+            [
+                "01fc4d7864d2e54c"
+            ]
+        ]
+    },
+    {
+        "id": "01fc4d7864d2e54c",
+        "type": "file",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1220,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "abdca41173ae0149",
+        "type": "NATS JetStream Consumer",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "server": "77ca465d2499cef7",
+        "subjects": "positions.>",
+        "delivery": "all",
+        "stream": "ensure",
+        "ensurestream": "03ce641126b3a8b5",
+        "consumertype": "ephemeral",
+        "durable": "positionsqueuegroup1",
+        "startseq": 0,
+        "starttime": 0,
+        "ack": "auto",
+        "maxackpending": 2000,
+        "ackwait": 10000,
+        "maxworkerpending": "",
+        "maxdeliver": -1,
+        "payloadType": "json",
+        "x": 460,
+        "y": 700,
+        "wires": [
+            [
+                "9b47818c8e6059bc"
+            ]
+        ]
+    },
+    {
+        "id": "9b47818c8e6059bc",
+        "type": "function",
+        "z": "cdc1f90a18705388",
+        "name": "function 14",
+        "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 760,
+        "wires": [
+            [
+                "12777157fb9ff97f"
+            ]
+        ]
+    },
+    {
+        "id": "dacc51b5c08f95a1",
+        "type": "change",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.exit",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "05eedf9407f95b9c"
+            ]
+        ]
+    },
+    {
+        "id": "12777157fb9ff97f",
+        "type": "switch",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "property": "payload.exit",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 850,
+        "y": 760,
+        "wires": [
+            [
+                "9ce05a8e48bf47a6"
+            ],
+            [
+                "43aee3dade183f4d"
+            ]
+        ]
+    },
+    {
+        "id": "9ce05a8e48bf47a6",
+        "type": "template",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "field": "filename",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "/db/positions/{{payload.user}}",
+        "output": "str",
+        "x": 1000,
+        "y": 720,
+        "wires": [
+            [
+                "abad5e649c1d0f48"
+            ]
+        ]
+    },
+    {
+        "id": "abad5e649c1d0f48",
+        "type": "file",
+        "z": "cdc1f90a18705388",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "delete",
+        "encoding": "none",
+        "x": 1190,
+        "y": 700,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "de3c14f3e1d94db8",
@@ -3267,7 +3536,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1480,
+        "x": 1540,
         "y": 340,
         "wires": [
             [
@@ -3378,8 +3647,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1480,
-        "y": 480,
+        "x": 1520,
+        "y": 460,
         "wires": [
             [
                 "460f036eea5135bf"
@@ -3394,8 +3663,8 @@
         "server": "77ca465d2499cef7",
         "subject": "",
         "payloadType": "json",
-        "x": 1510,
-        "y": 400,
+        "x": 1770,
+        "y": 420,
         "wires": []
     },
     {
@@ -3591,19 +3860,49 @@
         "type": "template",
         "z": "b9fe1706e10bbbd9",
         "name": "",
-        "field": "topic",
+        "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "positions.{{payload.user}}",
         "output": "str",
-        "x": 1260,
-        "y": 360,
+        "x": 1240,
+        "y": 380,
         "wires": [
             [
-                "460f036eea5135bf"
+                "e9d79dc2d3b47810",
+                "2795fea42f241e2c"
             ]
         ]
+    },
+    {
+        "id": "e9d79dc2d3b47810",
+        "type": "link out",
+        "z": "b9fe1706e10bbbd9",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "95e8dd306e59a683"
+        ],
+        "x": 1625,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "2795fea42f241e2c",
+        "type": "debug",
+        "z": "b9fe1706e10bbbd9",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1620,
+        "y": 140,
+        "wires": []
     },
     {
         "id": "affeeeeb3e49b35c",
