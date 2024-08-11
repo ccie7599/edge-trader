@@ -24,3 +24,7 @@ Whether the intent is to build a multiplayer game, a realtime scoreboard, or enh
 * Positions and Cash Management is processed by each game node in the cluster, read from a durable stream, and stored locally for fast query response. No matter what node a player connects to, they will receive a consistent view of their cash and positions.
 
 * All of the game components are open-source, cloud-native platforms, making the game easy to setup, modify, administer, and scale up or down.
+
+## Event Flow Diagram
+
+![image](https://github.com/user-attachments/assets/9f853f7f-c6e9-4605-a21b-034a2b8b482a)
