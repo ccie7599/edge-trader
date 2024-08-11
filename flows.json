@@ -454,7 +454,7 @@
         "depth": 0,
         "stat": false,
         "showWarnings": false,
-        "x": 420,
+        "x": 560,
         "y": 340,
         "wires": [
             [
@@ -473,8 +473,8 @@
         "syntax": "mustache",
         "template": "{\"start\":\"/db/positions\",\"pattern\":\"{{payload.id}}\",\"files\":\"!context\"}",
         "output": "json",
-        "x": 260,
-        "y": 380,
+        "x": 240,
+        "y": 400,
         "wires": [
             [
                 "df352aeb04137f06"
@@ -513,7 +513,8 @@
         "y": 160,
         "wires": [
             [
-                "c7a26e46dfc31e8e"
+                "c7a26e46dfc31e8e",
+                "f7f75facd3ac1252"
             ]
         ]
     },
@@ -543,262 +544,10 @@
         "y": 160,
         "wires": [
             [
-                "9122e9e653c64fd6"
+                "aed93a2afe92b189"
             ],
             [
-                "29f94074758853f4"
-            ]
-        ]
-    },
-    {
-        "id": "5ddb2022d0809ca9",
-        "type": "function",
-        "z": "5d71f4dcae6e888c",
-        "name": "CallPriceFunction",
-        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesCallPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var callPrice = S * normcdf(d1) - K * Math.exp(-r * T) * normcdf(d2);\n    return callPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar callPrice = blackScholesCallPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { callPrice: callPrice };\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 830,
-        "y": 120,
-        "wires": [
-            [
-                "aed93a2afe92b189"
-            ]
-        ]
-    },
-    {
-        "id": "4dc3a36767e93b9c",
-        "type": "function",
-        "z": "5d71f4dcae6e888c",
-        "name": "PutPriceFunction",
-        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesPutPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var putPrice = K * Math.exp(-r * T) * normcdf(-d2) - S * normcdf(-d1);\n    return putPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar putPrice = blackScholesPutPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { putPrice: putPrice };\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 160,
-        "wires": [
-            [
-                "8456dd6b8ef12380"
-            ]
-        ]
-    },
-    {
-        "id": "9122e9e653c64fd6",
-        "type": "change",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.currentPrice",
-                "pt": "msg",
-                "to": "price",
-                "tot": "global"
-            },
-            {
-                "t": "set",
-                "p": "payload.riskFreeRate",
-                "pt": "msg",
-                "to": ".05",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "payload.volatility",
-                "pt": "msg",
-                "to": ".25",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "payload.term",
-                "pt": "msg",
-                "to": ".125",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "user",
-                "pt": "msg",
-                "to": "payload.user",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "strikePrice",
-                "pt": "msg",
-                "to": "payload.strikePrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "costbasis",
-                "pt": "msg",
-                "to": "payload.callPrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "quotedPrice",
-                "pt": "msg",
-                "to": "payload.currentPrice",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 620,
-        "y": 120,
-        "wires": [
-            [
-                "5ddb2022d0809ca9"
-            ]
-        ]
-    },
-    {
-        "id": "29f94074758853f4",
-        "type": "change",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.currentPrice",
-                "pt": "msg",
-                "to": "price",
-                "tot": "global"
-            },
-            {
-                "t": "set",
-                "p": "payload.riskFreeRate",
-                "pt": "msg",
-                "to": ".05",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "payload.volatility",
-                "pt": "msg",
-                "to": ".25",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "payload.term",
-                "pt": "msg",
-                "to": ".125",
-                "tot": "num"
-            },
-            {
-                "t": "set",
-                "p": "user",
-                "pt": "msg",
-                "to": "payload.user",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "strikePrice",
-                "pt": "msg",
-                "to": "payload.strikePrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "costbasis",
-                "pt": "msg",
-                "to": "payload.putPrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "quotedPrice",
-                "pt": "msg",
-                "to": "payload.currentPrice",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 600,
-        "y": 180,
-        "wires": [
-            [
-                "4dc3a36767e93b9c"
-            ]
-        ]
-    },
-    {
-        "id": "8456dd6b8ef12380",
-        "type": "change",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.user",
-                "pt": "msg",
-                "to": "user",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "payload.strikePrice",
-                "pt": "msg",
-                "to": "strikePrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "announce",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload.callorput",
-                "pt": "msg",
-                "to": "put",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload.costbasis",
-                "pt": "msg",
-                "to": "costbasis",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "payload.quotedPrice",
-                "pt": "msg",
-                "to": "quotedPrice",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 920,
-        "y": 260,
-        "wires": [
-            [
-                "002894801fd243ba"
+                "db02734f1ade3501"
             ]
         ]
     },
@@ -810,27 +559,6 @@
         "rules": [
             {
                 "t": "set",
-                "p": "payload.user",
-                "pt": "msg",
-                "to": "user",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "payload.strikePrice",
-                "pt": "msg",
-                "to": "strikePrice",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "announce",
-                "tot": "str"
-            },
-            {
-                "t": "set",
                 "p": "payload.callorput",
                 "pt": "msg",
                 "to": "call",
@@ -840,14 +568,7 @@
                 "t": "set",
                 "p": "payload.costbasis",
                 "pt": "msg",
-                "to": "costbasis",
-                "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "payload.quotedPrice",
-                "pt": "msg",
-                "to": "quotedPrice",
+                "to": "payload.callPrice",
                 "tot": "msg"
             }
         ],
@@ -856,11 +577,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1060,
+        "x": 940,
         "y": 120,
         "wires": [
             [
-                "002894801fd243ba"
+                "98376d679b0d50ea"
             ]
         ]
     },
@@ -1010,30 +731,12 @@
         "syntax": "mustache",
         "template": "{\"message\":\"{{payload.user}} holding {{payload.callorput}} at {{payload.strikePrice}} cost {{payload.costbasis}}\"}",
         "output": "json",
-        "x": 1180,
-        "y": 220,
+        "x": 1480,
+        "y": 160,
         "wires": [
             [
-                "98376d679b0d50ea"
-            ]
-        ]
-    },
-    {
-        "id": "98376d679b0d50ea",
-        "type": "template",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "field": "subject",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "positionsannounce.{{user}}",
-        "output": "str",
-        "x": 1320,
-        "y": 280,
-        "wires": [
-            [
-                "06b96b5adb7303f6"
+                "06b96b5adb7303f6",
+                "7448043fa79b9cb4"
             ]
         ]
     },
@@ -1122,7 +825,7 @@
         "z": "5d71f4dcae6e888c",
         "name": "",
         "pauseType": "delay",
-        "timeout": "1",
+        "timeout": ".1",
         "timeoutUnits": "seconds",
         "rate": "1",
         "nbRateUnits": "1",
@@ -1133,7 +836,7 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 320,
+        "x": 500,
         "y": 620,
         "wires": [
             [
@@ -1188,6 +891,112 @@
         "x": 570,
         "y": 760,
         "wires": []
+    },
+    {
+        "id": "f7f75facd3ac1252",
+        "type": "debug",
+        "z": "5d71f4dcae6e888c",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "db02734f1ade3501",
+        "type": "change",
+        "z": "5d71f4dcae6e888c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.callorput",
+                "pt": "msg",
+                "to": "put",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.costbasis",
+                "pt": "msg",
+                "to": "payload.putPrice",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 940,
+        "y": 220,
+        "wires": [
+            [
+                "fc03a4b1474faad8"
+            ]
+        ]
+    },
+    {
+        "id": "7448043fa79b9cb4",
+        "type": "debug",
+        "z": "5d71f4dcae6e888c",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1500,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "98376d679b0d50ea",
+        "type": "template",
+        "z": "5d71f4dcae6e888c",
+        "name": "",
+        "field": "subject",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "positionsannounce.{{payload.user}}",
+        "output": "str",
+        "x": 1220,
+        "y": 140,
+        "wires": [
+            [
+                "002894801fd243ba"
+            ]
+        ]
+    },
+    {
+        "id": "fc03a4b1474faad8",
+        "type": "template",
+        "z": "5d71f4dcae6e888c",
+        "name": "",
+        "field": "subject",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "positionsannounce.{{payload.user}}",
+        "output": "str",
+        "x": 1220,
+        "y": 200,
+        "wires": [
+            [
+                "002894801fd243ba"
+            ]
+        ]
     },
     {
         "id": "a25e6e8ef180019e",
@@ -1604,7 +1413,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
+        "x": 490,
         "y": 320,
         "wires": [
             [
@@ -1656,7 +1465,9 @@
         "y": 460,
         "wires": [
             [
-                "99d3a2a0930f1f63"
+                "99d3a2a0930f1f63",
+                "5c3cece4d7038d72",
+                "6789afb23a5a6e74"
             ]
         ]
     },
@@ -1692,6 +1503,47 @@
         "encoding": "none",
         "x": 1020,
         "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5c3cece4d7038d72",
+        "type": "debug",
+        "z": "ddaea7293bc64d2e",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "6789afb23a5a6e74",
+        "type": "change",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "price",
+                "pt": "global",
+                "to": "payload.currentprice",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 820,
+        "y": 420,
         "wires": [
             []
         ]
@@ -3340,7 +3192,8 @@
         "wires": [
             [
                 "4e86b090912902b9",
-                "82985b82ed4da2f2"
+                "82985b82ed4da2f2",
+                "c41fdd9e51d7f04c"
             ]
         ]
     },
@@ -3902,6 +3755,22 @@
         "statusType": "auto",
         "x": 1620,
         "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c41fdd9e51d7f04c",
+        "type": "debug",
+        "z": "b9fe1706e10bbbd9",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 40,
         "wires": []
     },
     {
