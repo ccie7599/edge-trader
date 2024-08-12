@@ -21,7 +21,7 @@ Whether the intent is to build a multiplayer game, a realtime scoreboard, or enh
 
 * Orders are placed through a Websockets channel that is also embedded in HTML and also transmitted through Akamai's CDN and Security network. The NATS.io system keeps orders in a strongly consistent datastream, ensuring ordering and strict acknowledgement of delivery. The stream is configured as a work queue, so that orders will be processed exactly-once, while ensuring that multiple order processors are available for redudancy.
 
-* Positions and Cash Management is processed by each game node in the cluster, read from a durable stream, and stored locally for fast query response. No matter what node a player connects to, they will receive a consistent view of their cash and positions.
+* Positions and Cash Management is processed by each game node in the cluster, read from a durable stream, and stored locally for fast query response. No matter what node a player connects to, they will receive a consistent view of their cash and positions. These streams are persistent, and as new State nodes are added (or if existing nodes are disconnected and reconnect), they will receive all messages in the stream, allowing them to catch up to current game state.
 
 * All of the game components are open-source, cloud-native platforms, making the game easy to setup, modify, administer, and scale up or down.
 
