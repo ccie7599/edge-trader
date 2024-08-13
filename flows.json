@@ -47,147 +47,12 @@
         "env": []
     },
     {
-        "id": "2603a383d6b1e7d9",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "host.docker.internal",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
         "id": "838c10f9d3dbf441",
         "type": "ui_tab",
         "name": "Home",
         "icon": "dashboard",
         "disabled": false,
         "hidden": false
-    },
-    {
-        "id": "09ca0e3032db3e0d",
-        "type": "ui_base",
-        "theme": {
-            "name": "theme-light",
-            "lightTheme": {
-                "default": "#0094CE",
-                "baseColor": "#0094CE",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": true,
-                "reset": false
-            },
-            "darkTheme": {
-                "default": "#097479",
-                "baseColor": "#097479",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
-                "edited": false
-            },
-            "customTheme": {
-                "name": "Untitled Theme 1",
-                "default": "#4B7930",
-                "baseColor": "#4B7930",
-                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-            },
-            "themeState": {
-                "base-color": {
-                    "default": "#0094CE",
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-titlebar-backgroundColor": {
-                    "value": "#0094CE",
-                    "edited": false
-                },
-                "page-backgroundColor": {
-                    "value": "#fafafa",
-                    "edited": false
-                },
-                "page-sidebar-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-textColor": {
-                    "value": "#1bbfff",
-                    "edited": false
-                },
-                "group-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "group-backgroundColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "widget-textColor": {
-                    "value": "#111111",
-                    "edited": false
-                },
-                "widget-backgroundColor": {
-                    "value": "#0094ce",
-                    "edited": false
-                },
-                "widget-borderColor": {
-                    "value": "#ffffff",
-                    "edited": false
-                },
-                "base-font": {
-                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
-                }
-            },
-            "angularTheme": {
-                "primary": "indigo",
-                "accents": "blue",
-                "warn": "red",
-                "background": "grey",
-                "palette": "light"
-            }
-        },
-        "site": {
-            "name": "Node-RED Dashboard",
-            "hideToolbar": "false",
-            "allowSwipe": "false",
-            "lockMenu": "false",
-            "allowTempTheme": "true",
-            "dateFormat": "DD/MM/YYYY",
-            "sizes": {
-                "sx": 48,
-                "sy": 48,
-                "gx": 6,
-                "gy": 6,
-                "cx": 6,
-                "cy": 6,
-                "px": 0,
-                "py": 0
-            }
-        }
-    },
-    {
-        "id": "7821203aa2670ff3",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "838c10f9d3dbf441",
-        "order": 1,
-        "disp": true,
-        "width": "19",
-        "collapse": false,
-        "className": ""
     },
     {
         "id": "77ca465d2499cef7",
@@ -426,7 +291,7 @@
         "id": "df352aeb04137f06",
         "type": "fs-file-lister",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "check for player position file",
         "start": "/",
         "pattern": "*.*",
         "folders": "*",
@@ -437,8 +302,8 @@
         "depth": 0,
         "stat": false,
         "showWarnings": false,
-        "x": 680,
-        "y": 140,
+        "x": 200,
+        "y": 580,
         "wires": [
             [
                 "e11c43487502fe2d"
@@ -449,15 +314,15 @@
         "id": "83865b96673d6a46",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "write query for position file ",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "{\"start\":\"/db/positions\",\"pattern\":\"{{payload.id}}\",\"files\":\"!context\"}",
         "output": "json",
-        "x": 680,
-        "y": 100,
+        "x": 980,
+        "y": 120,
         "wires": [
             [
                 "df352aeb04137f06"
@@ -468,7 +333,7 @@
         "id": "dfb74b8f46a6fd72",
         "type": "file in",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "read player position file ",
         "filename": "payload",
         "filenameType": "msg",
         "format": "utf8",
@@ -476,8 +341,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 840,
-        "y": 260,
+        "x": 190,
+        "y": 700,
         "wires": [
             [
                 "500b454f13cd5a71"
@@ -488,12 +353,12 @@
         "id": "500b454f13cd5a71",
         "type": "json",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "convert to json",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 810,
-        "y": 320,
+        "x": 400,
+        "y": 700,
         "wires": [
             [
                 "c7a26e46dfc31e8e"
@@ -504,7 +369,7 @@
         "id": "c7a26e46dfc31e8e",
         "type": "switch",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "check if call or put",
         "property": "payload.callorput",
         "propertyType": "msg",
         "rules": [
@@ -522,8 +387,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1010,
-        "y": 220,
+        "x": 590,
+        "y": 700,
         "wires": [
             [
                 "aed93a2afe92b189",
@@ -539,7 +404,7 @@
         "id": "aed93a2afe92b189",
         "type": "change",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "change message properties to get",
         "rules": [
             {
                 "t": "set",
@@ -561,11 +426,11 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1180,
-        "y": 160,
+        "x": 860,
+        "y": 700,
         "wires": [
             [
-                "98376d679b0d50ea"
+                "fc03a4b1474faad8"
             ]
         ]
     },
@@ -577,15 +442,15 @@
         "server": "77ca465d2499cef7",
         "subject": "",
         "payloadType": "json",
-        "x": 1430,
-        "y": 60,
+        "x": 870,
+        "y": 380,
         "wires": []
     },
     {
         "id": "7baf9d9a3b6fa84e",
         "type": "NATS JetStream Consumer",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "subscribe to enter events",
         "server": "77ca465d2499cef7",
         "subjects": "enter",
         "delivery": "new",
@@ -601,8 +466,8 @@
         "maxworkerpending": 1000,
         "maxdeliver": -1,
         "payloadType": "json",
-        "x": 140,
-        "y": 40,
+        "x": 170,
+        "y": 120,
         "wires": [
             [
                 "ea38c83958f8b681",
@@ -615,15 +480,15 @@
         "id": "ea38c83958f8b681",
         "type": "function",
         "z": "5d71f4dcae6e888c",
-        "name": "function 12",
+        "name": "normalize payload",
         "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 330,
-        "y": 160,
+        "x": 530,
+        "y": 120,
         "wires": [
             [
                 "6706a88493626059",
@@ -635,15 +500,15 @@
         "id": "6706a88493626059",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set filename to player id",
         "field": "filename",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "/db/cash/{{payload.id}}",
         "output": "str",
-        "x": 360,
-        "y": 240,
+        "x": 470,
+        "y": 180,
         "wires": [
             [
                 "217189c677261848"
@@ -654,7 +519,7 @@
         "id": "217189c677261848",
         "type": "file in",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "read cash file",
         "filename": "filename",
         "filenameType": "msg",
         "format": "utf8",
@@ -662,8 +527,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 360,
-        "y": 280,
+        "x": 470,
+        "y": 220,
         "wires": [
             [
                 "6d0b1f7e5c7c08cc"
@@ -674,12 +539,12 @@
         "id": "6d0b1f7e5c7c08cc",
         "type": "json",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "convert to json",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 370,
-        "y": 320,
+        "x": 500,
+        "y": 260,
         "wires": [
             [
                 "37cd697adf11260f"
@@ -690,15 +555,15 @@
         "id": "37cd697adf11260f",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set subject to cash.user",
         "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "cash.{{payload.user}}",
         "output": "str",
-        "x": 460,
-        "y": 360,
+        "x": 730,
+        "y": 260,
         "wires": [
             [
                 "06b96b5adb7303f6"
@@ -709,15 +574,15 @@
         "id": "002894801fd243ba",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "format announce message",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "{\"message\":\"{{payload.user}} holding {{payload.callorput}} at {{payload.strikePrice}} cost {{payload.costbasis}}\"}",
         "output": "json",
-        "x": 1420,
-        "y": 240,
+        "x": 1220,
+        "y": 560,
         "wires": [
             [
                 "06b96b5adb7303f6"
@@ -728,7 +593,7 @@
         "id": "e11c43487502fe2d",
         "type": "switch",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "does position exist ",
         "property": "payload",
         "propertyType": "msg",
         "rules": [
@@ -744,8 +609,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 850,
-        "y": 140,
+        "x": 210,
+        "y": 640,
         "wires": [
             [
                 "4c41fa9786b9d666"
@@ -759,7 +624,7 @@
         "id": "f46c7f9b03e263fc",
         "type": "NATS JetStream Consumer",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "Subscribe to position events",
         "server": "77ca465d2499cef7",
         "subjects": "positions.>",
         "delivery": "new",
@@ -776,7 +641,7 @@
         "maxdeliver": -1,
         "payloadType": "json",
         "x": 120,
-        "y": 120,
+        "y": 400,
         "wires": [
             [
                 "ddb6c9862f3323b2",
@@ -788,15 +653,15 @@
         "id": "7e06e1847072833a",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "write query for player position file",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "{\"start\":\"/db/positions\",\"pattern\":\"{{payload.data.user}}\",\"files\":\"!context\"}",
         "output": "json",
-        "x": 620,
-        "y": 200,
+        "x": 220,
+        "y": 540,
         "wires": [
             [
                 "df352aeb04137f06"
@@ -820,8 +685,8 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 440,
-        "y": 120,
+        "x": 180,
+        "y": 460,
         "wires": [
             [
                 "7e06e1847072833a"
@@ -832,15 +697,15 @@
         "id": "4c41fa9786b9d666",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set message as No Position",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "{\"message\":\"No Position\"}",
         "output": "json",
-        "x": 900,
-        "y": 60,
+        "x": 480,
+        "y": 620,
         "wires": [
             [
                 "f7b404a708ca8000"
@@ -851,15 +716,15 @@
         "id": "f7b404a708ca8000",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set subject to positionsannounce.user",
         "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "positionsannounce.{{config.pattern}}",
         "output": "str",
-        "x": 1060,
-        "y": 60,
+        "x": 630,
+        "y": 520,
         "wires": [
             [
                 "06b96b5adb7303f6"
@@ -872,15 +737,15 @@
         "z": "5d71f4dcae6e888c",
         "name": "",
         "action": "ack",
-        "x": 510,
-        "y": 40,
+        "x": 170,
+        "y": 60,
         "wires": []
     },
     {
         "id": "db02734f1ade3501",
         "type": "change",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "change message properties to put",
         "rules": [
             {
                 "t": "set",
@@ -902,8 +767,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1080,
-        "y": 300,
+        "x": 840,
+        "y": 740,
         "wires": [
             [
                 "fc03a4b1474faad8"
@@ -911,37 +776,18 @@
         ]
     },
     {
-        "id": "98376d679b0d50ea",
-        "type": "template",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "field": "subject",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "positionsannounce.{{payload.user}}",
-        "output": "str",
-        "x": 1240,
-        "y": 240,
-        "wires": [
-            [
-                "002894801fd243ba"
-            ]
-        ]
-    },
-    {
         "id": "fc03a4b1474faad8",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set subect to positionsannounce.user",
         "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
         "template": "positionsannounce.{{payload.user}}",
         "output": "str",
-        "x": 1060,
-        "y": 500,
+        "x": 950,
+        "y": 600,
         "wires": [
             [
                 "002894801fd243ba"
@@ -952,15 +798,15 @@
         "id": "96f728f199d318fa",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set subject to postionsSub.user",
         "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "positions.{{payload.user}}",
+        "template": "positionsSub.{{payload.user}}",
         "output": "str",
-        "x": 1400,
-        "y": 360,
+        "x": 790,
+        "y": 560,
         "wires": [
             [
                 "06b96b5adb7303f6"
@@ -971,15 +817,15 @@
         "id": "dc250e09c3ef4520",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "Set filename to player id ",
         "field": "filename",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "/db/cash/{{payload.id}}",
+        "template": "/db/positions/{{payload.id}}",
         "output": "str",
-        "x": 140,
-        "y": 320,
+        "x": 190,
+        "y": 240,
         "wires": [
             [
                 "b717fc5d806e68fd"
@@ -990,7 +836,7 @@
         "id": "b717fc5d806e68fd",
         "type": "file in",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "read positions file for player",
         "filename": "filename",
         "filenameType": "msg",
         "format": "utf8",
@@ -998,8 +844,8 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 300,
-        "y": 440,
+        "x": 200,
+        "y": 280,
         "wires": [
             [
                 "7f2c7495e0a05dfa"
@@ -1007,34 +853,18 @@
         ]
     },
     {
-        "id": "7f2c7495e0a05dfa",
-        "type": "json",
-        "z": "5d71f4dcae6e888c",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 470,
-        "y": 500,
-        "wires": [
-            [
-                "e9ec6643dbe1e6b3"
-            ]
-        ]
-    },
-    {
         "id": "e9ec6643dbe1e6b3",
         "type": "template",
         "z": "5d71f4dcae6e888c",
-        "name": "",
+        "name": "set subect to positionsSub.user",
         "field": "subject",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "positions.{{payload.user}}",
+        "template": "positionsSub.{{payload.user}}",
         "output": "str",
-        "x": 660,
-        "y": 540,
+        "x": 530,
+        "y": 360,
         "wires": [
             [
                 "06b96b5adb7303f6"
@@ -1045,15 +875,15 @@
         "id": "cf5a390b869dca68",
         "type": "function",
         "z": "5d71f4dcae6e888c",
-        "name": "function 15",
+        "name": "normalize payload",
         "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 130,
-        "y": 220,
+        "x": 190,
+        "y": 180,
         "wires": [
             [
                 "dc250e09c3ef4520"
@@ -1061,314 +891,18 @@
         ]
     },
     {
-        "id": "a25e6e8ef180019e",
-        "type": "inject",
-        "z": "ddaea7293bc64d2e",
-        "d": true,
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "250",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 110,
-        "y": 160,
-        "wires": [
-            [
-                "a2922744ea0eb505"
-            ]
-        ]
-    },
-    {
-        "id": "a2922744ea0eb505",
-        "type": "file in",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "filename": "/db/marketdata",
-        "filenameType": "str",
-        "format": "lines",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 280,
-        "y": 180,
-        "wires": [
-            [
-                "c869068a849d9876"
-            ]
-        ]
-    },
-    {
-        "id": "c869068a849d9876",
-        "type": "delay",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "pauseType": "rate",
-        "timeout": "1",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 470,
-        "y": 180,
-        "wires": [
-            [
-                "6e53e5037fa912cf"
-            ]
-        ]
-    },
-    {
-        "id": "6e53e5037fa912cf",
-        "type": "change",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "$number(payload)",
-                "tot": "jsonata"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 660,
-        "y": 180,
-        "wires": [
-            [
-                "ef4865ded2eeced6",
-                "f2173cd7525a639b",
-                "0e9a3046b1c15512"
-            ]
-        ]
-    },
-    {
-        "id": "36ed55075d8384fc",
-        "type": "mqtt out",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "topic": "price",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "2603a383d6b1e7d9",
-        "x": 1250,
-        "y": 200,
-        "wires": []
-    },
-    {
-        "id": "0e9a3046b1c15512",
-        "type": "ui_chart",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "group": "7821203aa2670ff3",
-        "order": 0,
-        "width": 0,
-        "height": 0,
-        "label": "chart",
-        "chartType": "line",
-        "legend": "false",
-        "xformat": "HH:mm:ss",
-        "interpolate": "linear",
-        "nodata": "",
-        "dot": true,
-        "ymin": "170",
-        "ymax": "250",
-        "removeOlder": 1,
-        "removeOlderPoints": "250",
-        "removeOlderUnit": "3600",
-        "cutout": 0,
-        "useOneColor": false,
-        "useUTC": false,
-        "colors": [
-            "#1f77b4",
-            "#aec7e8",
-            "#ff7f0e",
-            "#2ca02c",
-            "#98df8a",
-            "#d62728",
-            "#ff9896",
-            "#9467bd",
-            "#c5b0d5"
-        ],
-        "outputs": 1,
-        "useDifferentColor": false,
-        "className": "",
-        "x": 870,
-        "y": 220,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f2173cd7525a639b",
-        "type": "template",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "field": "payload",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "{\"currentprice\":{{payload}}}",
-        "output": "json",
-        "x": 880,
-        "y": 180,
-        "wires": [
-            [
-                "068dcb20abdb801e"
-            ]
-        ]
-    },
-    {
-        "id": "ef4865ded2eeced6",
-        "type": "change",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "price",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 900,
-        "y": 260,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "068dcb20abdb801e",
-        "type": "join",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "mode": "custom",
-        "build": "merged",
+        "id": "7f2c7495e0a05dfa",
+        "type": "json",
+        "z": "5d71f4dcae6e888c",
+        "name": "convert file to json",
         "property": "payload",
-        "propertyType": "msg",
-        "key": "topic",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "1",
-        "count": "3",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 1010,
-        "y": 120,
-        "wires": [
-            [
-                "99d3a2a0930f1f63",
-                "36ed55075d8384fc"
-            ]
-        ]
-    },
-    {
-        "id": "86b858c17efe2425",
-        "type": "change",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.currentPrice",
-                "pt": "msg",
-                "to": "price",
-                "tot": "global"
-            },
-            {
-                "t": "set",
-                "p": "payload.strikePrice",
-                "pt": "msg",
-                "to": "price",
-                "tot": "global"
-            }
-        ],
         "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 300,
-        "y": 60,
+        "pretty": false,
+        "x": 170,
+        "y": 320,
         "wires": [
             [
-                "85e112d2d022533b",
-                "51d0990b8434e37a"
-            ]
-        ]
-    },
-    {
-        "id": "51d0990b8434e37a",
-        "type": "function",
-        "z": "ddaea7293bc64d2e",
-        "name": "CallPriceFunction",
-        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesCallPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var callPrice = S * normcdf(d1) - K * Math.exp(-r * T) * normcdf(d2);\n    return callPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar callPrice = blackScholesCallPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { callPrice: callPrice };\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 140,
-        "wires": [
-            [
-                "068dcb20abdb801e"
-            ]
-        ]
-    },
-    {
-        "id": "85e112d2d022533b",
-        "type": "function",
-        "z": "ddaea7293bc64d2e",
-        "name": "PutPriceFunction",
-        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesPutPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var putPrice = K * Math.exp(-r * T) * normcdf(-d2) - S * normcdf(-d1);\n    return putPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar putPrice = blackScholesPutPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { putPrice: putPrice };\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 510,
-        "y": 100,
-        "wires": [
-            [
-                "068dcb20abdb801e"
+                "e9ec6643dbe1e6b3"
             ]
         ]
     },
@@ -1396,45 +930,9 @@
         "name": "",
         "event": "message",
         "data": "",
-        "x": 1090,
-        "y": 500,
+        "x": 1110,
+        "y": 460,
         "wires": []
-    },
-    {
-        "id": "16c6432ce8819d3f",
-        "type": "inject",
-        "z": "ddaea7293bc64d2e",
-        "d": true,
-        "name": "",
-        "props": [
-            {
-                "p": "payload.riskFreeRate",
-                "v": ".05",
-                "vt": "num"
-            },
-            {
-                "p": "payload.volatility",
-                "v": ".25",
-                "vt": "num"
-            },
-            {
-                "p": "payload.term",
-                "v": ".125",
-                "vt": "num"
-            }
-        ],
-        "repeat": "1",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 90,
-        "y": 120,
-        "wires": [
-            [
-                "86b858c17efe2425"
-            ]
-        ]
     },
     {
         "id": "2ff6ecad410024b8",
@@ -1504,8 +1002,8 @@
         "maxworkerpending": "",
         "maxdeliver": -1,
         "payloadType": "json",
-        "x": 180,
-        "y": 380,
+        "x": 160,
+        "y": 440,
         "wires": [
             [
                 "e5ae0c457802c8f6"
@@ -1587,8 +1085,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
-        "y": 420,
+        "x": 680,
+        "y": 440,
         "wires": [
             []
         ]
@@ -3720,9 +3218,7 @@
         "x": 120,
         "y": 80,
         "wires": [
-            [
-                "affeeeeb3e49b35c"
-            ]
+            []
         ]
     },
     {
@@ -3759,9 +3255,7 @@
         "x": 120,
         "y": 120,
         "wires": [
-            [
-                "affeeeeb3e49b35c"
-            ]
+            []
         ]
     },
     {
@@ -3793,28 +3287,7 @@
         "x": 120,
         "y": 40,
         "wires": [
-            [
-                "affeeeeb3e49b35c"
-            ]
+            []
         ]
-    },
-    {
-        "id": "affeeeeb3e49b35c",
-        "type": "mqtt out",
-        "z": "20146b04c8e6e589",
-        "d": true,
-        "name": "",
-        "topic": "",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "2603a383d6b1e7d9",
-        "x": 350,
-        "y": 80,
-        "wires": []
     }
 ]
