@@ -8,7 +8,7 @@ The game logic runs in a nodejs container, and uses a NATS.io cluster to maintai
 
 The game is built to be delivered through Akamai Content Delivery, Security, and Load Balancing systems. Sample HTML pages for the game can be found in examples. 
 
-A running demo of the game can be accessed here - https://workshop.connected-cloud.io/scoreboard/testscore.html?origin=bapley
+A running demo of the game can be accessed here - https://workshop.connected-cloud.io/scoreboard/testscore.html?origin=edgenative
 
 ## Game Deployment Architecture
 ![image](https://github.com/user-attachments/assets/4a2f0dce-b4e5-4e93-a9d5-79b26237a7ea)
