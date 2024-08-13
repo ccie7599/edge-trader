@@ -47,6 +47,14 @@
         "env": []
     },
     {
+        "id": "b5085c463cd3dfe8",
+        "type": "tab",
+        "label": "Quote Service ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "838c10f9d3dbf441",
         "type": "ui_tab",
         "name": "Home",
@@ -3402,6 +3410,255 @@
         "y": 40,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "4f2a5b531fc510b0",
+        "type": "http in",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "url": "/quote",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 120,
+        "wires": [
+            [
+                "621d5e521abc9295"
+            ]
+        ]
+    },
+    {
+        "id": "463714566044a24f",
+        "type": "function",
+        "z": "b5085c463cd3dfe8",
+        "name": "PutPriceFunction",
+        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesPutPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var putPrice = K * Math.exp(-r * T) * normcdf(-d2) - S * normcdf(-d1);\n    return putPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar putPrice = blackScholesPutPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { putPrice: putPrice };\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 220,
+        "wires": [
+            [
+                "4547da1658f6560e"
+            ]
+        ]
+    },
+    {
+        "id": "dae95bc62bc16f32",
+        "type": "function",
+        "z": "b5085c463cd3dfe8",
+        "name": "CallPriceFunction",
+        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesCallPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var callPrice = S * normcdf(d1) - K * Math.exp(-r * T) * normcdf(d2);\n    return callPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar callPrice = blackScholesCallPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { callPrice: callPrice };\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 140,
+        "wires": [
+            [
+                "572ee0039c418ca2"
+            ]
+        ]
+    },
+    {
+        "id": "cb29cd13ae9ca128",
+        "type": "change",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.riskFreeRate",
+                "pt": "msg",
+                "to": ".05",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.volatility",
+                "pt": "msg",
+                "to": ".25",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.term",
+                "pt": "msg",
+                "to": ".125",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 140,
+        "wires": [
+            [
+                "dae95bc62bc16f32"
+            ]
+        ]
+    },
+    {
+        "id": "8d07a0948c5f2606",
+        "type": "change",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.riskFreeRate",
+                "pt": "msg",
+                "to": ".05",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.volatility",
+                "pt": "msg",
+                "to": ".25",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.term",
+                "pt": "msg",
+                "to": ".125",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 220,
+        "wires": [
+            [
+                "463714566044a24f"
+            ]
+        ]
+    },
+    {
+        "id": "621d5e521abc9295",
+        "type": "switch",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "property": "payload.optionType",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "call",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "put",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "cb29cd13ae9ca128"
+            ],
+            [
+                "8d07a0948c5f2606"
+            ]
+        ]
+    },
+    {
+        "id": "04b7b83a83fd9c2f",
+        "type": "http response",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1150,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4547da1658f6560e",
+        "type": "change",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.calculatedPrice",
+                "pt": "msg",
+                "to": "payload.putPrice",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.optionType",
+                "pt": "msg",
+                "to": "req.query.optionType",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 200,
+        "wires": [
+            [
+                "04b7b83a83fd9c2f"
+            ]
+        ]
+    },
+    {
+        "id": "572ee0039c418ca2",
+        "type": "change",
+        "z": "b5085c463cd3dfe8",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.calculatedPrice",
+                "pt": "msg",
+                "to": "payload.callPrice",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.optionType",
+                "pt": "msg",
+                "to": "req.query.optionType",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1000,
+        "y": 100,
+        "wires": [
+            [
+                "04b7b83a83fd9c2f"
+            ]
         ]
     }
 ]
