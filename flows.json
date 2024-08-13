@@ -606,7 +606,8 @@
         "wires": [
             [
                 "ea38c83958f8b681",
-                "b5b0e98aecc5a274"
+                "b5b0e98aecc5a274",
+                "cf5a390b869dca68"
             ]
         ]
     },
@@ -621,13 +622,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 290,
-        "y": 180,
+        "x": 330,
+        "y": 160,
         "wires": [
             [
                 "6706a88493626059",
-                "83865b96673d6a46",
-                "dc250e09c3ef4520"
+                "83865b96673d6a46"
             ]
         ]
     },
@@ -1038,6 +1038,25 @@
         "wires": [
             [
                 "06b96b5adb7303f6"
+            ]
+        ]
+    },
+    {
+        "id": "cf5a390b869dca68",
+        "type": "function",
+        "z": "5d71f4dcae6e888c",
+        "name": "function 15",
+        "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "dc250e09c3ef4520"
             ]
         ]
     },
