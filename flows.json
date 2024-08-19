@@ -55,6 +55,14 @@
         "env": []
     },
     {
+        "id": "8235bfe377d1edf1",
+        "type": "tab",
+        "label": "registration endpoint",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "838c10f9d3dbf441",
         "type": "ui_tab",
         "name": "Home",
@@ -3660,5 +3668,51 @@
                 "04b7b83a83fd9c2f"
             ]
         ]
+    },
+    {
+        "id": "71a367ecf0d707b4",
+        "type": "http in",
+        "z": "8235bfe377d1edf1",
+        "name": "",
+        "url": "/reg",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 320,
+        "y": 280,
+        "wires": [
+            [
+                "ab0de79a40273320",
+                "521a687c62f79c80"
+            ]
+        ]
+    },
+    {
+        "id": "ab0de79a40273320",
+        "type": "http response",
+        "z": "8235bfe377d1edf1",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 570,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "521a687c62f79c80",
+        "type": "debug",
+        "z": "8235bfe377d1edf1",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 340,
+        "wires": []
     }
 ]
