@@ -243,6 +243,34 @@
         }
     },
     {
+        "id": "91cf2841674da452",
+        "type": "NATS JetStream Stream",
+        "name": "",
+        "stream": "redisprice",
+        "description": "",
+        "subjects": "redisprice",
+        "max_msgs": "-1",
+        "max_age": "",
+        "max_ageunit": "second",
+        "max_size": "-1",
+        "max_sizeunit": "mb",
+        "num_replicas": "1"
+    },
+    {
+        "id": "53c17a8cc149b298",
+        "type": "NATS JetStream Stream",
+        "name": "",
+        "stream": "redisprice2",
+        "description": "",
+        "subjects": "redisprice2",
+        "max_msgs": "-1",
+        "max_age": "",
+        "max_ageunit": "second",
+        "max_size": "-1",
+        "max_sizeunit": "mb",
+        "num_replicas": "1"
+    },
+    {
         "id": "4c887660b8bc7b81",
         "type": "http request",
         "z": "5f8937d2bf1fe3b6",
@@ -1027,8 +1055,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 520,
-        "y": 540,
+        "x": 940,
+        "y": 560,
         "wires": [
             [
                 "99d3a2a0930f1f63"
@@ -1114,8 +1142,8 @@
         "maxworkerpending": "",
         "maxdeliver": -1,
         "payloadType": "json",
-        "x": 160,
-        "y": 440,
+        "x": 140,
+        "y": 660,
         "wires": [
             [
                 "e5ae0c457802c8f6"
@@ -1126,20 +1154,23 @@
         "id": "e5ae0c457802c8f6",
         "type": "function",
         "z": "ddaea7293bc64d2e",
+        "d": true,
         "name": "function 13",
         "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 460,
+        "x": 370,
+        "y": 600,
         "wires": [
             [
-                "99d3a2a0930f1f63",
+                "7bcd931cab00f944",
                 "6789afb23a5a6e74",
-                "7bcd931cab00f944"
+                "99d3a2a0930f1f63",
+                "572b97af41f012cf"
             ]
         ]
     },
@@ -1198,8 +1229,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 640,
-        "y": 400,
+        "x": 580,
+        "y": 420,
         "wires": [
             []
         ]
@@ -1220,6 +1251,280 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "572b97af41f012cf",
+        "type": "debug",
+        "z": "ddaea7293bc64d2e",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "5b526c129de8c572",
+        "type": "NATS JetStream Consumer",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "server": "77ca465d2499cef7",
+        "subjects": "redisprice2",
+        "delivery": "new",
+        "stream": "ensure",
+        "ensurestream": "53c17a8cc149b298",
+        "consumertype": "ephemeral",
+        "durable": "cashdurable1",
+        "startseq": 0,
+        "starttime": 0,
+        "ack": "auto",
+        "maxackpending": 2000,
+        "ackwait": 10000,
+        "maxworkerpending": "",
+        "maxdeliver": -1,
+        "payloadType": "json",
+        "x": 160,
+        "y": 760,
+        "wires": [
+            [
+                "67c3ad530371ba8b",
+                "46d909a54151151a"
+            ]
+        ]
+    },
+    {
+        "id": "67c3ad530371ba8b",
+        "type": "function",
+        "z": "ddaea7293bc64d2e",
+        "name": "function 15",
+        "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 740,
+        "wires": [
+            [
+                "c7d284e83cae4f8d"
+            ]
+        ]
+    },
+    {
+        "id": "e1bb40ebbd4538e3",
+        "type": "debug",
+        "z": "ddaea7293bc64d2e",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "c7d284e83cae4f8d",
+        "type": "template",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\"currentprice\":{{payload.message.price}}}",
+        "output": "json",
+        "x": 600,
+        "y": 740,
+        "wires": [
+            [
+                "856df6ddc45e1697",
+                "86b858c17efe2425",
+                "068dcb20abdb801e"
+            ]
+        ]
+    },
+    {
+        "id": "856df6ddc45e1697",
+        "type": "change",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "price",
+                "pt": "global",
+                "to": "payload.currentprice",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "86b858c17efe2425",
+        "type": "change",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.currentPrice",
+                "pt": "msg",
+                "to": "price",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.strikePrice",
+                "pt": "msg",
+                "to": "price",
+                "tot": "global"
+            },
+            {
+                "t": "set",
+                "p": "payload.riskFreeRate",
+                "pt": "msg",
+                "to": ".05",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.volatility",
+                "pt": "msg",
+                "to": ".25",
+                "tot": "num"
+            },
+            {
+                "t": "set",
+                "p": "payload.term",
+                "pt": "msg",
+                "to": ".125",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 800,
+        "y": 740,
+        "wires": [
+            [
+                "51d0990b8434e37a",
+                "85e112d2d022533b"
+            ]
+        ]
+    },
+    {
+        "id": "85e112d2d022533b",
+        "type": "function",
+        "z": "ddaea7293bc64d2e",
+        "name": "PutPriceFunction",
+        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesPutPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var putPrice = K * Math.exp(-r * T) * normcdf(-d2) - S * normcdf(-d1);\n    return putPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar putPrice = blackScholesPutPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { putPrice: putPrice };\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 680,
+        "wires": [
+            [
+                "068dcb20abdb801e"
+            ]
+        ]
+    },
+    {
+        "id": "51d0990b8434e37a",
+        "type": "function",
+        "z": "ddaea7293bc64d2e",
+        "name": "CallPriceFunction",
+        "func": "function normcdf(x) {\n    // constants\n    var a1 = 0.254829592;\n    var a2 = -0.284496736;\n    var a3 = 1.421413741;\n    var a4 = -1.453152027;\n    var a5 = 1.061405429;\n    var p = 0.3275911;\n\n    // Save the sign of x\n    var sign = 1;\n    if (x < 0) {\n        sign = -1;\n    }\n    x = Math.abs(x) / Math.sqrt(2.0);\n\n    // A&S formula 7.1.26\n    var t = 1.0 / (1.0 + p * x);\n    var y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);\n\n    return 0.5 * (1.0 + sign * y);\n}\n\nfunction blackScholesCallPrice(S, K, r, sigma, T) {\n    var d1 = (Math.log(S / K) + (r + Math.pow(sigma, 2) / 2) * T) / (sigma * Math.sqrt(T));\n    var d2 = d1 - sigma * Math.sqrt(T);\n\n    var callPrice = S * normcdf(d1) - K * Math.exp(-r * T) * normcdf(d2);\n    return callPrice;\n}\n\nvar strikePrice = msg.payload.strikePrice;\nvar currentPrice = msg.payload.currentPrice;\nvar riskFreeRate = msg.payload.riskFreeRate;\nvar volatility = msg.payload.volatility;\nvar term = msg.payload.term;\n\nvar callPrice = blackScholesCallPrice(currentPrice, strikePrice, riskFreeRate, volatility, term);\n\nmsg.payload = { callPrice: callPrice };\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 720,
+        "wires": [
+            [
+                "068dcb20abdb801e"
+            ]
+        ]
+    },
+    {
+        "id": "068dcb20abdb801e",
+        "type": "join",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "mode": "custom",
+        "build": "merged",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "1",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1130,
+        "y": 600,
+        "wires": [
+            [
+                "e1bb40ebbd4538e3",
+                "99d3a2a0930f1f63",
+                "6793d5088b65963e"
+            ]
+        ]
+    },
+    {
+        "id": "46d909a54151151a",
+        "type": "NATS JetStream Acknowledge",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "action": "ack",
+        "x": 410,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "6793d5088b65963e",
+        "type": "NATS JetStream Publish",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "server": "77ca465d2499cef7",
+        "subject": "price",
+        "payloadType": "json",
+        "x": 1470,
+        "y": 480,
+        "wires": []
     },
     {
         "id": "fa05c04b3dfe6c30",
@@ -3678,12 +3983,14 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 320,
-        "y": 280,
+        "x": 220,
+        "y": 260,
         "wires": [
             [
                 "ab0de79a40273320",
-                "521a687c62f79c80"
+                "521a687c62f79c80",
+                "b52adfcff6a4880a",
+                "64d4f5eb10517792"
             ]
         ]
     },
@@ -3694,8 +4001,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 570,
-        "y": 280,
+        "x": 590,
+        "y": 240,
         "wires": []
     },
     {
@@ -3711,8 +4018,210 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 500,
-        "y": 340,
+        "x": 600,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "6e2b1ee475be2d9c",
+        "type": "inject",
+        "z": "8235bfe377d1edf1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "keygoeshere",
+        "payloadType": "str",
+        "x": 230,
+        "y": 100,
+        "wires": [
+            [
+                "85107ef3256b23aa"
+            ]
+        ]
+    },
+    {
+        "id": "85107ef3256b23aa",
+        "type": "change",
+        "z": "8235bfe377d1edf1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "key",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 400,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b52adfcff6a4880a",
+        "type": "template",
+        "z": "8235bfe377d1edf1",
+        "d": true,
+        "name": "",
+        "field": "headers.Authorization",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Bearer: {{global.key}}",
+        "output": "str",
+        "x": 580,
+        "y": 280,
+        "wires": [
+            [
+                "64d4f5eb10517792"
+            ]
+        ]
+    },
+    {
+        "id": "34a6160e08866728",
+        "type": "http request",
+        "z": "8235bfe377d1edf1",
+        "d": true,
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://api.linode.com/v4/account/users",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [],
+        "x": 830,
+        "y": 200,
+        "wires": [
+            [
+                "4926db25a1662c6f"
+            ]
+        ]
+    },
+    {
+        "id": "4926db25a1662c6f",
+        "type": "debug",
+        "z": "8235bfe377d1edf1",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "64d4f5eb10517792",
+        "type": "change",
+        "z": "8235bfe377d1edf1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.username",
+                "pt": "msg",
+                "to": "payload.userid",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 380,
+        "wires": [
+            [
+                "34a6160e08866728",
+                "0f4decf8ac3ba900"
+            ]
+        ]
+    },
+    {
+        "id": "0f4decf8ac3ba900",
+        "type": "debug",
+        "z": "8235bfe377d1edf1",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "21e554444182f4a4",
+        "type": "NATS JetStream Consumer",
+        "z": "8235bfe377d1edf1",
+        "name": "Subscribe to position events",
+        "server": "77ca465d2499cef7",
+        "subjects": "redisprice",
+        "delivery": "new",
+        "stream": "ensure",
+        "ensurestream": "91cf2841674da452",
+        "consumertype": "ephemeral",
+        "durable": "positionsqueuegroup2",
+        "startseq": 0,
+        "starttime": 0,
+        "ack": "manual",
+        "maxackpending": 2000,
+        "ackwait": 10000,
+        "maxworkerpending": 1000,
+        "maxdeliver": -1,
+        "payloadType": "json",
+        "x": 240,
+        "y": 580,
+        "wires": [
+            [
+                "4aa87e469596389f"
+            ]
+        ]
+    },
+    {
+        "id": "4aa87e469596389f",
+        "type": "debug",
+        "z": "8235bfe377d1edf1",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 580,
         "wires": []
     }
 ]
