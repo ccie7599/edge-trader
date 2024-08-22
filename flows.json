@@ -39,25 +39,9 @@
         "env": []
     },
     {
-        "id": "20146b04c8e6e589",
-        "type": "tab",
-        "label": "Simulate Orders",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "b5085c463cd3dfe8",
         "type": "tab",
         "label": "Quote Service ",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "8235bfe377d1edf1",
-        "type": "tab",
-        "label": "registration endpoint",
         "disabled": false,
         "info": "",
         "env": []
@@ -1047,23 +1031,6 @@
         ]
     },
     {
-        "id": "26f444a6d4d176ad",
-        "type": "http in",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "url": "/sse",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 940,
-        "y": 560,
-        "wires": [
-            [
-                "99d3a2a0930f1f63"
-            ]
-        ]
-    },
-    {
         "id": "99d3a2a0930f1f63",
         "type": "sse-server",
         "z": "ddaea7293bc64d2e",
@@ -1123,58 +1090,6 @@
         ]
     },
     {
-        "id": "e6be770d2f172af6",
-        "type": "NATS JetStream Consumer",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "server": "77ca465d2499cef7",
-        "subjects": "price",
-        "delivery": "new",
-        "stream": "ensure",
-        "ensurestream": "3f63d51dc28bc584",
-        "consumertype": "ephemeral",
-        "durable": "cashdurable1",
-        "startseq": 0,
-        "starttime": 0,
-        "ack": "auto",
-        "maxackpending": 2000,
-        "ackwait": 10000,
-        "maxworkerpending": "",
-        "maxdeliver": -1,
-        "payloadType": "json",
-        "x": 140,
-        "y": 660,
-        "wires": [
-            [
-                "e5ae0c457802c8f6"
-            ]
-        ]
-    },
-    {
-        "id": "e5ae0c457802c8f6",
-        "type": "function",
-        "z": "ddaea7293bc64d2e",
-        "d": true,
-        "name": "function 13",
-        "func": "// Check if msg.payload and msg.payload.data exist and are objects\nif (msg.payload && msg.payload.data && typeof msg.payload.data === 'object') {\n    // Copy properties from msg.payload.data to msg.payload\n    for (let key in msg.payload.data) {\n        if (msg.payload.data.hasOwnProperty(key)) {\n            msg.payload[key] = msg.payload.data[key];\n        }\n    }\n    // Remove the original data object from msg.payload\n    delete msg.payload.data;\n} else {\n    node.error(\"msg.payload.data is not an object\", msg);\n}\n\nreturn msg;\n",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 370,
-        "y": 600,
-        "wires": [
-            [
-                "7bcd931cab00f944",
-                "6789afb23a5a6e74",
-                "99d3a2a0930f1f63",
-                "572b97af41f012cf"
-            ]
-        ]
-    },
-    {
         "id": "eda78219d617e1ba",
         "type": "template",
         "z": "ddaea7293bc64d2e",
@@ -1209,65 +1124,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "6789afb23a5a6e74",
-        "type": "change",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "price",
-                "pt": "global",
-                "to": "payload.currentprice",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 580,
-        "y": 420,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "7bcd931cab00f944",
-        "type": "file",
-        "z": "ddaea7293bc64d2e",
-        "name": "",
-        "filename": "/db/price",
-        "filenameType": "str",
-        "appendNewline": false,
-        "createDir": true,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 780,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "572b97af41f012cf",
-        "type": "debug",
-        "z": "ddaea7293bc64d2e",
-        "name": "debug 5",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1000,
-        "y": 380,
-        "wires": []
     },
     {
         "id": "5b526c129de8c572",
@@ -1316,23 +1172,6 @@
                 "c7d284e83cae4f8d"
             ]
         ]
-    },
-    {
-        "id": "e1bb40ebbd4538e3",
-        "type": "debug",
-        "z": "ddaea7293bc64d2e",
-        "name": "debug 6",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1200,
-        "y": 760,
-        "wires": []
     },
     {
         "id": "c7d284e83cae4f8d",
@@ -1498,7 +1337,6 @@
         "y": 600,
         "wires": [
             [
-                "e1bb40ebbd4538e3",
                 "99d3a2a0930f1f63",
                 "6793d5088b65963e"
             ]
@@ -3620,112 +3458,6 @@
         "wires": []
     },
     {
-        "id": "431afaa832c526f1",
-        "type": "inject",
-        "z": "20146b04c8e6e589",
-        "name": "Call Order",
-        "props": [
-            {
-                "p": "payload.type",
-                "v": "call",
-                "vt": "str"
-            },
-            {
-                "p": "payload.user",
-                "v": "bapley",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
-                "p": "payload.buyorsell",
-                "v": "buy",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "order",
-        "x": 120,
-        "y": 80,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "e0e3e317b4e07809",
-        "type": "inject",
-        "z": "20146b04c8e6e589",
-        "name": "Put Order",
-        "props": [
-            {
-                "p": "payload.type",
-                "v": "put",
-                "vt": "str"
-            },
-            {
-                "p": "payload.user",
-                "v": "bapley",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
-                "p": "payload.buyorsell",
-                "v": "buy",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "order",
-        "x": 120,
-        "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "0d76d723651bc6f6",
-        "type": "inject",
-        "z": "20146b04c8e6e589",
-        "name": "Sell order",
-        "props": [
-            {
-                "p": "payload.user",
-                "v": "bapley",
-                "vt": "str"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            },
-            {
-                "p": "payload.buyorsell",
-                "v": "sell",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "order",
-        "x": 120,
-        "y": 40,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "4f2a5b531fc510b0",
         "type": "http in",
         "z": "b5085c463cd3dfe8",
@@ -3973,255 +3705,5 @@
                 "04b7b83a83fd9c2f"
             ]
         ]
-    },
-    {
-        "id": "71a367ecf0d707b4",
-        "type": "http in",
-        "z": "8235bfe377d1edf1",
-        "name": "",
-        "url": "/reg",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 220,
-        "y": 260,
-        "wires": [
-            [
-                "ab0de79a40273320",
-                "521a687c62f79c80",
-                "b52adfcff6a4880a",
-                "64d4f5eb10517792"
-            ]
-        ]
-    },
-    {
-        "id": "ab0de79a40273320",
-        "type": "http response",
-        "z": "8235bfe377d1edf1",
-        "name": "",
-        "statusCode": "",
-        "headers": {},
-        "x": 590,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "521a687c62f79c80",
-        "type": "debug",
-        "z": "8235bfe377d1edf1",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 600,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "6e2b1ee475be2d9c",
-        "type": "inject",
-        "z": "8235bfe377d1edf1",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "keygoeshere",
-        "payloadType": "str",
-        "x": 230,
-        "y": 100,
-        "wires": [
-            [
-                "85107ef3256b23aa"
-            ]
-        ]
-    },
-    {
-        "id": "85107ef3256b23aa",
-        "type": "change",
-        "z": "8235bfe377d1edf1",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "key",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 400,
-        "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b52adfcff6a4880a",
-        "type": "template",
-        "z": "8235bfe377d1edf1",
-        "d": true,
-        "name": "",
-        "field": "headers.Authorization",
-        "fieldType": "msg",
-        "format": "handlebars",
-        "syntax": "mustache",
-        "template": "Bearer: {{global.key}}",
-        "output": "str",
-        "x": 580,
-        "y": 280,
-        "wires": [
-            [
-                "64d4f5eb10517792"
-            ]
-        ]
-    },
-    {
-        "id": "34a6160e08866728",
-        "type": "http request",
-        "z": "8235bfe377d1edf1",
-        "d": true,
-        "name": "",
-        "method": "POST",
-        "ret": "txt",
-        "paytoqs": "ignore",
-        "url": "https://api.linode.com/v4/account/users",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "bearer",
-        "senderr": false,
-        "headers": [],
-        "x": 830,
-        "y": 200,
-        "wires": [
-            [
-                "4926db25a1662c6f"
-            ]
-        ]
-    },
-    {
-        "id": "4926db25a1662c6f",
-        "type": "debug",
-        "z": "8235bfe377d1edf1",
-        "name": "debug 2",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 980,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "64d4f5eb10517792",
-        "type": "change",
-        "z": "8235bfe377d1edf1",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload.username",
-                "pt": "msg",
-                "to": "payload.userid",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 700,
-        "y": 380,
-        "wires": [
-            [
-                "34a6160e08866728",
-                "0f4decf8ac3ba900"
-            ]
-        ]
-    },
-    {
-        "id": "0f4decf8ac3ba900",
-        "type": "debug",
-        "z": "8235bfe377d1edf1",
-        "name": "debug 3",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 940,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "21e554444182f4a4",
-        "type": "NATS JetStream Consumer",
-        "z": "8235bfe377d1edf1",
-        "name": "Subscribe to position events",
-        "server": "77ca465d2499cef7",
-        "subjects": "redisprice",
-        "delivery": "new",
-        "stream": "ensure",
-        "ensurestream": "91cf2841674da452",
-        "consumertype": "ephemeral",
-        "durable": "positionsqueuegroup2",
-        "startseq": 0,
-        "starttime": 0,
-        "ack": "manual",
-        "maxackpending": 2000,
-        "ackwait": 10000,
-        "maxworkerpending": 1000,
-        "maxdeliver": -1,
-        "payloadType": "json",
-        "x": 240,
-        "y": 580,
-        "wires": [
-            [
-                "4aa87e469596389f"
-            ]
-        ]
-    },
-    {
-        "id": "4aa87e469596389f",
-        "type": "debug",
-        "z": "8235bfe377d1edf1",
-        "name": "debug 4",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 520,
-        "y": 580,
-        "wires": []
     }
 ]
