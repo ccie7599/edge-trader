@@ -1365,6 +1365,23 @@
         "wires": []
     },
     {
+        "id": "33915e35d7bdcabc",
+        "type": "http in",
+        "z": "ddaea7293bc64d2e",
+        "name": "",
+        "url": "/sse",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 760,
+        "y": 480,
+        "wires": [
+            [
+                "99d3a2a0930f1f63"
+            ]
+        ]
+    },
+    {
         "id": "fa05c04b3dfe6c30",
         "type": "switch",
         "z": "cdc1f90a18705388",
