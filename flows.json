@@ -1132,7 +1132,7 @@
         "name": "",
         "server": "77ca465d2499cef7",
         "subjects": "redisprice2",
-        "delivery": "new",
+        "delivery": "last",
         "stream": "ensure",
         "ensurestream": "53c17a8cc149b298",
         "consumertype": "ephemeral",
